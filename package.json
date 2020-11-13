@@ -1,29 +1,26 @@
 {
-  "name": "rest-apis",
+  "name": "nodejs-complete-guide",
   "version": "1.0.0",
-  "description": "REST APIs",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mohmed-Refaay/REST-APIs.git"
+    "url": "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/udemy-course-nodejs-complete"
   },
-  "author": "Refaay",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Mohmed-Refaay/REST-APIs/issues"
-  },
-  "homepage": "https://github.com/Mohmed-Refaay/REST-APIs#readme",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-validator": "^6.6.1",
-    "mongoose": "^5.10.13"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-validator": "^5.3.0",
+    "mongoose": "^5.3.2",
+    "multer": "^1.4.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "nodemon": "^1.18.4"
   }
 }
