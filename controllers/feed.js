@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator/check");
 const Post = require("../models/post");
+const User = require("../models/user");
 
 const fs = require("fs");
 const path = require("path");
@@ -47,19 +48,29 @@ exports.createPost = (req, res, next) => {
   const imageUrl = req.file.path.replace(/\\/g, "/");
   const title = req.body.title;
   const content = req.body.content;
-  console.log(imageUrl);
+  let creator;
+
   const post = new Post({
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: "Refaay" },
+    creator: req.userId,
   });
   post
     .save()
     .then((result) => {
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      creator = user;
+      user.posts.push(post);
+      return user.save();
+    })
+    .then((result) => {
       res.status(201).json({
         message: "Post created successfully!",
-        post: result,
+        post,
+        creator: { _id: creator._id, name: creator.name },
       });
     })
     .catch((err) => {
@@ -113,7 +124,11 @@ exports.editPost = (req, res, next) => {
         err.statusCode = 404;
         throw err;
       }
-
+      if (post.creator.toString() !== req.userId) {
+        const err = new Error("not authorized!");
+        err.statusCode = 403;
+        throw err;
+      }
       if (imageUrl && post.imageUrl !== imageUrl) {
         clearImage(post.imageUrl);
         post.imageUrl = imageUrl;
@@ -143,11 +158,42 @@ exports.deletePost = (req, res, next) => {
         err.statusCode = 404;
         throw err;
       }
+      if (post.creator.toString() !== req.userId) {
+        const err = new Error("not authorized!");
+        err.statusCode = 403;
+        throw err;
+      }
       clearImage(post.imageUrl);
       return Post.findByIdAndRemove(postId);
     })
     .then((result) => {
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      user.posts.pull(postId);
+      return user.save();
+    })
+    .then((result) => {
       res.status(200).json({ message: "Post Deleted!" });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getStatus = (req, res, next) => {
+  const userId = req.userId;
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        const err = new Error("user not found!");
+        err.statusCode = 404;
+        throw err;
+      }
+      res.status(200).json({ status: user.status });
     })
     .catch((err) => {
       if (!err.statusCode) {
