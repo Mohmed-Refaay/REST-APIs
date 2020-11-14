@@ -18,13 +18,11 @@ exports.getPosts = (req, res, next) => {
         .limit(perPage);
     })
     .then((posts) => {
-      res
-        .status(200)
-        .json({
-          message: "Fetched posts successfully.",
-          posts: posts,
-          totalItems,
-        });
+      res.status(200).json({
+        message: "Fetched posts successfully.",
+        posts: posts,
+        totalItems,
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -54,7 +52,7 @@ exports.createPost = (req, res, next) => {
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: "Maximilian" },
+    creator: { name: "Refaay" },
   });
   post
     .save()
