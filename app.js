@@ -62,7 +62,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect("mongodb+srv://refaay:mado4ever@cluster0.imc7b.mongodb.net/messages")
+  .connect("mongodb+srv://refaay:***********@cluster0.imc7b.mongodb.net/messages")
   .then((result) => {
     app.listen(8080);
   })
